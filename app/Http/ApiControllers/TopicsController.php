@@ -87,7 +87,7 @@ class TopicsController extends Controller
     }
 
     /**
-     * 用户收藏的帖子列表.
+     * 用户关注的帖子列表.
      *
      * @param $user_id
      *
@@ -114,7 +114,7 @@ class TopicsController extends Controller
     public function store(Request $request)
     {
         try {
-            $topic = $this->topics->store($request->all());
+            $topic = $this->topics->create($request->all());
 
             return $this->response()->item($topic, new TopicTransformer());
         } catch (ValidatorException $e) {
@@ -134,7 +134,6 @@ class TopicsController extends Controller
         $this->topics->addAvailableInclude('user', ['name', 'avatar']);
 
         $topic = $this->topics
-            ->skipPresenter()
             ->autoWith()
             ->autoWithRootColumns(array_diff(Topic::$includable, ['body', 'body_original', 'excerpt']))
             ->find($id);
@@ -226,7 +225,6 @@ class TopicsController extends Controller
 
         $data = $this->topics
             ->autoWith()
-            ->skipPresenter()
             ->autoWithRootColumns([
                 'id',
                 'title',
